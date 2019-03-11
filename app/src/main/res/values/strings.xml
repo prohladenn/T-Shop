@@ -24,4 +24,8 @@
     <string name="phone_number_hint">Номер телефона</string>
     <string name="code_hint">Код из смс</string>
     <string name="ask_name_hint">Как вас зовут?</string>
+    <string name="questions">Дополнительные вопросы</string>
+    <string name="problem1">Водитель не выдал товар</string>
+    <string name="problem2">Товар ненадлежащего качества</string>
+    <string name="more">Другое</string>
 </resources>

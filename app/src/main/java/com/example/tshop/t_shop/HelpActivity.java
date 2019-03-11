@@ -12,18 +12,6 @@ import android.widget.Toast;
 
 public class HelpActivity extends Activity {
 
-    String textProblem = "";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help);
-        initialize();
-        buttonBackListener();
-        frameProblemListener();
-        frameSendListener();
-    }
-
     ImageView buttonBack;
     EditText textName;
     EditText textNumber;
@@ -32,7 +20,13 @@ public class HelpActivity extends Activity {
     FrameLayout frameProblem;
     FrameLayout frameSend;
 
-    void initialize() {
+    String textProblem = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_help);
+
         buttonBack = findViewById(R.id.button_help_back);
         textName = findViewById(R.id.edit_text_help_name);
         textNumber = findViewById(R.id.edit_text_help_number);
@@ -40,6 +34,25 @@ public class HelpActivity extends Activity {
         textViewProblem = findViewById(R.id.edit_text_help_description);
         frameProblem = findViewById(R.id.button_help_description);
         frameSend = findViewById(R.id.button_help_send);
+
+        Intent intent = getIntent();
+
+        switch (intent.getIntExtra("problem", 0)) {
+            case 1: {
+                textTheme.setText(R.string.problem1);
+                break;
+            }
+            case 2: {
+                textTheme.setText(R.string.problem2);
+                break;
+            }
+            default:
+                break;
+        }
+
+        buttonBackListener();
+        frameProblemListener();
+        frameSendListener();
     }
 
     private void buttonBackListener() {
@@ -73,10 +86,10 @@ public class HelpActivity extends Activity {
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
 
             textProblem = data.getStringExtra("text_problem");
-            if (textProblem.isEmpty()){
+            if (textProblem.isEmpty()) {
                 textViewProblem.setText(R.string.help_description);
-                textViewProblem.setTextColor(getResources().getColor(R.color.colorText));}
-            else {
+                textViewProblem.setTextColor(getResources().getColor(R.color.colorText));
+            } else {
                 String firstLine = textProblem.substring(0, textProblem.indexOf('\n'));
                 textViewProblem.setText(firstLine);
                 textViewProblem.setTextColor(getResources().getColor(R.color.colorBlack));

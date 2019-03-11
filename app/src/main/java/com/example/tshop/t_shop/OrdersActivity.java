@@ -1,10 +1,12 @@
 package com.example.tshop.t_shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
@@ -17,6 +19,10 @@ public class OrdersActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView buttonBack;
 
+    TextView problemOne;
+    TextView problemTwo;
+    TextView problem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +30,26 @@ public class OrdersActivity extends AppCompatActivity {
 
         buttonBack = findViewById(R.id.orders_button_back);
         recyclerView = findViewById(R.id.orders_recycler_view);
+
+        problemOne = findViewById(R.id.orders_text_one);
+        problemOne.setOnClickListener(v -> {
+            Intent intent = new Intent(OrdersActivity.this, HelpActivity.class);
+            intent.putExtra("problem", 1);
+            startActivity(intent);
+        });
+
+        problemTwo = findViewById(R.id.orders_text_two);
+        problemTwo.setOnClickListener(v -> {
+            Intent intent = new Intent(OrdersActivity.this, HelpActivity.class);
+            intent.putExtra("problem", 2);
+            startActivity(intent);
+        });
+
+        problem = findViewById(R.id.orders_text_three);
+        problem.setOnClickListener(v -> {
+            Intent intent = new Intent(OrdersActivity.this, HelpActivity.class);
+            startActivity(intent);
+        });
 
         generateOrderList();
 
