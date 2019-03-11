@@ -59,9 +59,18 @@ public class PreviewDialogActivity extends Activity {
         priceTextView.setText(String.valueOf(product.getPriceAmount()));
         priceCurTextView.setText(product.getPriceCurrency());
 
-        if (product.getSelected() > 0)
-            inBasket(product);
-        else notInBasket(product);
+        //todo режим для диалогового окна без + и -
+        if (intent.getBooleanExtra("order", false)) {
+            buyButton.setVisibility(View.INVISIBLE);
+            addButton.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
+            countTextView.setVisibility(View.INVISIBLE);
+            countTextView.setText(product.getCount().toString());
+        } else {
+            if (product.getSelected() > 0)
+                inBasket(product);
+            else notInBasket(product);
+        }
     }
 
     void inBasket(Product product) {

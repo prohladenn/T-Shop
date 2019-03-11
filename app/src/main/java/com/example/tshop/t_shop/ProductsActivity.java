@@ -26,6 +26,7 @@ public class ProductsActivity extends AppCompatActivity {
 
     ArrayList<Product> products = new ArrayList<>();
 
+    OrderSimpleAdapter orderSimpleAdapter;
     ProductAdapter productAdapter;
     RecyclerView recyclerView;
     TextView amountTextView;
@@ -72,9 +73,18 @@ public class ProductsActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(v -> onBackPressed());
     }
 
+    //todo обычный листенер с + и -
     private void onProductClick(int i) {
         Intent dialog = new Intent(ProductsActivity.this, PreviewDialogActivity.class);
         dialog.putExtra("product", products.get(i));
+        startActivityForResult(dialog, 1111);
+    }
+
+    //todo простой листенер с одним числом
+    private void onProductClickSimple(int i) {
+        Intent dialog = new Intent(ProductsActivity.this, PreviewDialogActivity.class);
+        dialog.putExtra("product", products.get(i));
+        dialog.putExtra("order", true);
         startActivityForResult(dialog, 1111);
     }
 
@@ -142,9 +152,17 @@ public class ProductsActivity extends AppCompatActivity {
                 );
 
             }
-            productAdapter = new ProductAdapter(products, ProductsActivity.this,
-                    this::onProductClick, amountTextView, amountCurTextView);
-            recyclerView.setAdapter(productAdapter);
+
+            //todo раздедение на ордеры и не ордеры
+            Intent intent = getIntent();
+            if (intent.getBooleanExtra("order", false)) {
+                orderSimpleAdapter = new OrderSimpleAdapter(products, this::onProductClickSimple);
+                recyclerView.setAdapter(orderSimpleAdapter);
+            } else {
+                productAdapter = new ProductAdapter(products, ProductsActivity.this,
+                        this::onProductClick, amountTextView, amountCurTextView);
+                recyclerView.setAdapter(productAdapter);
+            }
         });
     }
 

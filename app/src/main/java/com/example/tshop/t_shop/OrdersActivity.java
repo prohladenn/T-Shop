@@ -63,9 +63,13 @@ public class OrdersActivity extends AppCompatActivity {
 
     private void onOrderListener(int i) {
         /*
-        todo по клику интент и новая активити в виде ProductActivity с флагом
+        todo inventoryRef с тебя, а флвг готов
          */
         Toast.makeText(this, "Пока что не покажу", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(OrdersActivity.this, ProductsActivity.class);
+        //intent.putExtra("refPath", inventoryRef.getPath());
+        intent.putExtra("order", true);
+        startActivity(intent);
     }
 
     void backListener() {
