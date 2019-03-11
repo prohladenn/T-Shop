@@ -53,13 +53,69 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/orders_frame"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
         android:gravity="center"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/orders_text_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Дополнительные вопросы"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"
+            android:textStyle="bold"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/orders_text_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Водитель не выдал товар"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orders_text_one" />
+
+        <TextView
+            android:id="@+id/orders_text_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Товар ненадлежащего качества"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orders_text_two" />
+
+        <TextView
+            android:id="@+id/orders_text_four"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Другое"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orders_text_three" />
 
 
     </android.support.constraint.ConstraintLayout>
