@@ -128,9 +128,13 @@ public class StartActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_orders: {
+                Intent intent = new Intent(StartActivity.this, OrdersActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.nav_about_app: {
+                Intent intent = new Intent(StartActivity.this, DescriptionActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.nav_exit: {

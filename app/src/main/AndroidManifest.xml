@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tshop.t_shop">
 
     <application
@@ -10,22 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OrdersActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".DescriptionActivity"></activity>
+        <activity android:name=".OrdersActivity" />
         <activity
             android:name=".PreviewDialogActivity"
-            android:theme="@style/Theme.UserDialog"></activity>
+            android:theme="@style/Theme.UserDialog" />
         <activity android:name=".BasketActivity" />
         <activity android:name=".ProductsActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".ConfirmationActivity" />
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".StartActivity" />
         <activity android:name=".HelpActivity" />
