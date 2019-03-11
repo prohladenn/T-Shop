@@ -74,11 +74,12 @@ public class OrderSimpleAdapter extends RecyclerView.Adapter<OrderSimpleAdapter.
             priceTextView.setText(String.valueOf(product.getPriceAmount()));
             priceCurTextView.setText(product.getPriceCurrency());
             Picasso.get().load(product.getPictureSource()).resize(80, 80).into(avatarImageView);
-            countTextView.setText(product.getCount().toString());
+            // todo нужно другое поле Не getCount()
+            countTextView.setText(product.getCount().toString() + "шт.");
             buyButton.setVisibility(View.INVISIBLE);
             addButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.INVISIBLE);
-            countTextView.setVisibility(View.INVISIBLE);
+            countTextView.setVisibility(View.VISIBLE);
         }
 
     }

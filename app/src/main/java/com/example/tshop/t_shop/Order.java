@@ -1,41 +1,31 @@
 package com.example.tshop.t_shop;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
-import java.sql.Timestamp;
 
 public class Order {
     private Long count;
-    private Timestamp dateBegin;
-    private Timestamp dateCompletion;
-    private String orderNumber;
-    private DocumentReference orderRef;
+    private Timestamp dateCreation;
+    private Long orderNumber;
+    private DocumentReference basketRef;
     private String status;
-    private String type;
-    private String contactPhone;
-    private String userName;
     private DocumentReference userRef;
+    private DocumentReference shopRef;
 
     protected Order(Long count,
-                    Timestamp dateBegin,
-                    Timestamp dateCompletion,
-                    String orderNumber,
-                    DocumentReference orderRef,
+                    Timestamp dateCreation,
+                    Long orderNumber,
+                    DocumentReference basketRef,
                     String status,
-                    String type,
-                    String contactPhone,
-                    String userName,
-                    DocumentReference userRef) {
+                    DocumentReference userRef, DocumentReference shopRef) {
         this.count = count;
-        this.dateBegin = dateBegin;
-        this.dateCompletion = dateCompletion;
+        this.dateCreation = dateCreation;
         this.orderNumber = orderNumber;
-        this.orderRef = orderRef;
+        this.basketRef = basketRef;
         this.status = status;
-        this.type = type;
-        this.contactPhone = contactPhone;
-        this.userName = userName;
         this.userRef = userRef;
+        this.shopRef = shopRef;
     }
 
     public Long getCount() {
@@ -46,36 +36,28 @@ public class Order {
         this.count = count;
     }
 
-    public Timestamp getDateBegin() {
-        return dateBegin;
+    public Timestamp getDateCreation() {
+        return dateCreation;
     }
 
-    public void setDateBegin(Timestamp dateBegin) {
-        this.dateBegin = dateBegin;
+    public void setDateCreation(Timestamp dateCreation) {
+        this.dateCreation = dateCreation;
     }
 
-    public Timestamp getDateCompletion() {
-        return dateCompletion;
-    }
-
-    public void setDateCompletion(Timestamp dateCompletion) {
-        this.dateCompletion = dateCompletion;
-    }
-
-    public String getOrderNumber() {
+    public Long getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(String orderNumber) {
+    public void setOrderNumber(Long orderNumber) {
         this.orderNumber = orderNumber;
     }
 
-    public DocumentReference getOrderRef() {
-        return orderRef;
+    public DocumentReference getBasketRef() {
+        return basketRef;
     }
 
-    public void setOrderRef(DocumentReference orderRef) {
-        this.orderRef = orderRef;
+    public void setBasketRef(DocumentReference basketRef) {
+        this.basketRef = basketRef;
     }
 
     public String getStatus() {
@@ -86,35 +68,19 @@ public class Order {
         this.status = status;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getContactPhone() {
-        return contactPhone;
-    }
-
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public DocumentReference getUserRef() {
         return userRef;
     }
 
     public void setUserRef(DocumentReference userRef) {
         this.userRef = userRef;
+    }
+
+    public DocumentReference getShopRef() {
+        return shopRef;
+    }
+
+    public void setShopRef(DocumentReference shopRef) {
+        this.shopRef = shopRef;
     }
 }

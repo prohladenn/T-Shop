@@ -1,5 +1,6 @@
 package com.example.tshop.t_shop;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,10 +17,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,78 +39,86 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
 
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        nameTextView = headerView.findViewById(R.id.name);
-        phoneTextView = headerView.findViewById(R.id.number);
-        greetingTextView = findViewById(R.id.greeting);
-        codeEditText = findViewById(R.id.box_number);
-        nextButton = findViewById(R.id.button_next);
-        nextButton.setOnClickListener(v -> {
-            String code = codeEditText.getText().toString().trim();
-            if (code.isEmpty()) {
-                codeEditText.setError("Введите код");
-                codeEditText.requestFocus();
-                return;
-            }
-            mFirestore.collection("shops").get().addOnCompleteListener(task -> {
-                if (task.getResult() != null) {
-                    Boolean isShopExist = false;
-                    DocumentReference inventoryRef = null;
-                    for (DocumentSnapshot doc : task.getResult()) {
-                        if (doc.getString("code").equals(codeEditText.getText().toString().trim())) {
-                            isShopExist = true;
-                            inventoryRef = doc.getDocumentReference("inventory.reference");
-                        }
-                        if (isShopExist) {
-                            if (inventoryRef != null) {
-                                Intent intent = new Intent(StartActivity.this, ProductsActivity.class);
-                                intent.putExtra("refPath", inventoryRef.getPath());
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(StartActivity.this,
-                                        "Ошибка! Попробуйте ввести код заново", Toast.LENGTH_SHORT).show();
-                                return;
+        nameTextView = (TextView) headerView.findViewById(R.id.name);
+        phoneTextView = (TextView) headerView.findViewById(R.id.number);
+        greetingTextView = (TextView) findViewById(R.id.greeting);
+        codeEditText = (EditText) findViewById(R.id.box_number);
+        nextButton = (FrameLayout) findViewById(R.id.button_next);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String code = codeEditText.getText().toString().trim();
+                if (code.isEmpty()) {
+                    codeEditText.setError("Введите код");
+                    codeEditText.requestFocus();
+                    return;
+                }
+                mFirestore.collection("shops").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult() != null) {
+                            Boolean isShopExist = false;
+                            DocumentReference inventoryRef = null;
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                if (doc.getString("code").equals(codeEditText.getText().toString().trim())) {
+                                    isShopExist = true;
+                                    inventoryRef = doc.getDocumentReference("inventory.reference");
+                                }
+                                if (isShopExist) {
+                                    if (inventoryRef != null) {
+                                        Intent intent = new Intent(StartActivity.this, ProductsActivity.class);
+                                        intent.putExtra("refPath", inventoryRef.getPath());
+                                        intent.putExtra("shopPath", doc.getId());
+                                        intent.putExtra("order", false);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(StartActivity.this, "Ошибка! Попробуйте ввести код заново", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                } else {
+                                    Toast.makeText(StartActivity.this, "Нет магазина с таким кодом! Попробуйте ввести код заново", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
-                        } else {
-                            Toast.makeText(StartActivity.this,
-                                    "Нет магазина с таким кодом! Попробуйте ввести код заново", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                } else Toast.makeText(StartActivity.this,
-                        "Нет доступных магазинов", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(StartActivity.this, "Нет доступных магазинов", Toast.LENGTH_SHORT).show();
 
-            });
+                    }
+                });
+            }
         });
         mFirestore = FirebaseFirestore.getInstance();
-        mFirestore.collection("users").document(mAuth.getCurrentUser().getUid())
-                .get().addOnCompleteListener(task -> {
-            DocumentSnapshot doc = task.getResult();
-            String name = doc.getString("name");
-            String number = doc.getString("phoneNumber");
-            if (name != null && !name.isEmpty()) {
-                nameTextView.setText(name);
-                greetingTextView.setText("Добрый день, " + name + "!");
-            } else {
-                nameTextView.setText("Имя отсутствует");
-                greetingTextView.setText("Добрый день!");
+        mFirestore.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                String name = doc.getString("name");
+                String number = doc.getString("phoneNumber");
+                if (name != null && !name.isEmpty()) {
+                    nameTextView.setText(name);
+                    greetingTextView.setText("Добрый день, " + name + "!");
+                } else {
+                    nameTextView.setText("Имя отсутствует");
+                    greetingTextView.setText("Добрый день!");
+                }
+                if (number != null && !number.isEmpty())
+                    phoneTextView.setText(number);
+                else phoneTextView.setText("Номер отсутствует");
             }
-            if (number != null && !number.isEmpty())
-                phoneTextView.setText(number);
-            else phoneTextView.setText("Номер отсутствует");
         });
     }
 
@@ -123,7 +135,7 @@ public class StartActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
@@ -133,8 +145,8 @@ public class StartActivity extends AppCompatActivity
             }
             break;
             case R.id.nav_about_app: {
-                Intent intent = new Intent(StartActivity.this, DescriptionActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(StartActivity.this, AboutAppActivity.class);
+                //startActivity(intent);
             }
             break;
             case R.id.nav_exit: {

@@ -14,13 +14,14 @@ public class Product implements Serializable, Comparable<Product> {
     private String priceCurrency;
     private String valueAmount;
     private String valueUnits;
+    private String id;
     private Long count;
     private int selected;
 
     public Product(String name, String description,
                    String pictureSource, String pictureSubnail,
                    int priceAmount, String priceCurrency,
-                   String valueAmount, String valueUnits, Long count, int selected) {
+                   String valueAmount, String valueUnits, Long count, int selected, String id) {
         this.name = name;
         this.description = description;
         this.pictureSource = pictureSource;
@@ -31,6 +32,11 @@ public class Product implements Serializable, Comparable<Product> {
         this.valueUnits = valueUnits;
         this.count = count;
         this.selected = selected;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {

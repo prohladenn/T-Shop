@@ -59,7 +59,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             count.setText(order.getCount().toString());
 
             //todo какую суда дату выводить?
-            date.setText(order.getDateBegin().toString());
+            date.setText(order.getDateCreation().toDate().toString());
 
         }
 

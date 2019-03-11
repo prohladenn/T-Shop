@@ -64,8 +64,9 @@ public class PreviewDialogActivity extends Activity {
             buyButton.setVisibility(View.INVISIBLE);
             addButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.INVISIBLE);
-            countTextView.setVisibility(View.INVISIBLE);
-            countTextView.setText(product.getCount().toString());
+            countTextView.setVisibility(View.VISIBLE);
+            // todo нужно другое поле Не getCount()
+            countTextView.setText(product.getCount().toString() + "шт.");
         } else {
             if (product.getSelected() > 0)
                 inBasket(product);

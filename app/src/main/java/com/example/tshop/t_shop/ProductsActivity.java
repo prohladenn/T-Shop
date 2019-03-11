@@ -3,10 +3,12 @@ package com.example.tshop.t_shop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,12 @@ public class ProductsActivity extends AppCompatActivity {
     ImageView buttonBack;
     FrameLayout buttonInBasket;
     DocumentReference ref;
+    String docName;
+
+    ConstraintLayout helpFrame;
+    TextView problemOne;
+    TextView problemTwo;
+    TextView problem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +53,34 @@ public class ProductsActivity extends AppCompatActivity {
         amountCurTextView = findViewById(R.id.products_text_amount_cur);
         recyclerView = findViewById(R.id.products_recycler_view);
         ref = FirebaseFirestore.getInstance().document(getIntent().getStringExtra("refPath"));
-
+        Log.d("rhr", getIntent().getStringExtra("refPath"));
         generateStudentList();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         buttonInBasket = findViewById(R.id.products_button_basket);
         buttonInBasketListener();
+
+        helpFrame = findViewById(R.id.products_orders_frame);
+        problemOne = findViewById(R.id.products_orders_text_one);
+        problemOne.setOnClickListener(v -> {
+            Intent intent = new Intent(ProductsActivity.this, HelpActivity.class);
+            intent.putExtra("problem", 1);
+            startActivity(intent);
+        });
+
+        problemTwo = findViewById(R.id.products_orders_text_two);
+        problemTwo.setOnClickListener(v -> {
+            Intent intent = new Intent(ProductsActivity.this, HelpActivity.class);
+            intent.putExtra("problem", 2);
+            startActivity(intent);
+        });
+
+        problem = findViewById(R.id.products_orders_text_three);
+        problem.setOnClickListener(v -> {
+            Intent intent = new Intent(ProductsActivity.this, HelpActivity.class);
+            startActivity(intent);
+        });
 
         backListener();
     }
@@ -127,18 +156,31 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     private void generateStudentList() {
+        String collection = "";
+        docName = "";
+        if (!getIntent().getBooleanExtra("order", false)) {
+            collection = "items";
+            docName = "productRef";
 
-        ref.collection("items").addSnapshotListener((queryDocumentSnapshots, e) -> {
+        } else {
+            collection = "products";
+            docName = "product.reference";
+        }
+        ref.collection(collection).addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
             }
+
             for (QueryDocumentSnapshot docItem : queryDocumentSnapshots) {
+                Log.d("rhr", docItem.getId());
                 Long count = docItem.getLong("count");
-                Long reserved = docItem.getLong("reserved");
-                Task<DocumentSnapshot> task = docItem.getDocumentReference("productRef").get();
+                Long reserved = 0L;
+                if (docItem.getLong("reserved") != null)
+                    reserved = docItem.getLong("reserved");
+                Task<DocumentSnapshot> task = docItem.getDocumentReference(docName).get();
                 while (!task.isComplete()) {
-                    Log.d("LOGI", "WaitOwen");
+                    Log.d("LOGer", "WaitOwen");
                 }
                 DocumentSnapshot doc = task.getResult();
                 products.add(
@@ -148,7 +190,10 @@ public class ProductsActivity extends AppCompatActivity {
                                 doc.getLong("price.amount").intValue(),
                                 doc.getString("price.currency.shortName"),
                                 doc.getLong("value.amount").toString(),
-                                doc.getString("value.unit"), count - reserved, 0)
+                                doc.getString("value.unit"),
+                                count - reserved,
+                                0,
+                                doc.getId())
                 );
 
             }
@@ -158,10 +203,13 @@ public class ProductsActivity extends AppCompatActivity {
             if (intent.getBooleanExtra("order", false)) {
                 orderSimpleAdapter = new OrderSimpleAdapter(products, this::onProductClickSimple);
                 recyclerView.setAdapter(orderSimpleAdapter);
+                helpFrame.setVisibility(View.VISIBLE);
+                buttonInBasket.setVisibility(View.INVISIBLE);
             } else {
                 productAdapter = new ProductAdapter(products, ProductsActivity.this,
                         this::onProductClick, amountTextView, amountCurTextView);
                 recyclerView.setAdapter(productAdapter);
+                helpFrame.setVisibility(View.INVISIBLE);
             }
         });
     }
